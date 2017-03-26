@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E2A0ABFE1E7E7EC600149340 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A0ABFD1E7E7EC600149340 /* Logger.swift */; };
+		E2A0AC001E7E930F00149340 /* Validate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A0ABFF1E7E930F00149340 /* Validate.swift */; };
+		E2A0AC041E7F304100149340 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A0AC031E7F304100149340 /* BluetoothManager.swift */; };
+		E2A0AC061E7F30B500149340 /* WriteBluetoothValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A0AC051E7F30B500149340 /* WriteBluetoothValue.swift */; };
 		E2C3E6441E7B17C90083F37F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C3E6431E7B17C90083F37F /* main.swift */; };
-		E2C3E64B1E7B197A0083F37F /* ConsoleIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C3E64A1E7B197A0083F37F /* ConsoleIO.swift */; };
 		E2C3E64D1E7B19C60083F37F /* PlaybulbManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C3E64C1E7B19C60083F37F /* PlaybulbManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,9 +28,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E2A0ABFD1E7E7EC600149340 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		E2A0ABFF1E7E930F00149340 /* Validate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validate.swift; sourceTree = "<group>"; };
+		E2A0AC031E7F304100149340 /* BluetoothManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
+		E2A0AC051E7F30B500149340 /* WriteBluetoothValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteBluetoothValue.swift; sourceTree = "<group>"; };
 		E2C3E6401E7B17C90083F37F /* playbulb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = playbulb; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2C3E6431E7B17C90083F37F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		E2C3E64A1E7B197A0083F37F /* ConsoleIO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleIO.swift; sourceTree = "<group>"; };
 		E2C3E64C1E7B19C60083F37F /* PlaybulbManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybulbManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,8 +68,11 @@
 			isa = PBXGroup;
 			children = (
 				E2C3E6431E7B17C90083F37F /* main.swift */,
-				E2C3E64A1E7B197A0083F37F /* ConsoleIO.swift */,
 				E2C3E64C1E7B19C60083F37F /* PlaybulbManager.swift */,
+				E2A0ABFD1E7E7EC600149340 /* Logger.swift */,
+				E2A0ABFF1E7E930F00149340 /* Validate.swift */,
+				E2A0AC031E7F304100149340 /* BluetoothManager.swift */,
+				E2A0AC051E7F30B500149340 /* WriteBluetoothValue.swift */,
 			);
 			path = playbulb;
 			sourceTree = "<group>";
@@ -128,7 +137,10 @@
 			files = (
 				E2C3E6441E7B17C90083F37F /* main.swift in Sources */,
 				E2C3E64D1E7B19C60083F37F /* PlaybulbManager.swift in Sources */,
-				E2C3E64B1E7B197A0083F37F /* ConsoleIO.swift in Sources */,
+				E2A0AC061E7F30B500149340 /* WriteBluetoothValue.swift in Sources */,
+				E2A0AC001E7E930F00149340 /* Validate.swift in Sources */,
+				E2A0AC041E7F304100149340 /* BluetoothManager.swift in Sources */,
+				E2A0ABFE1E7E7EC600149340 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +270,7 @@
 				E2C3E6491E7B17C90083F37F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

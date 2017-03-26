@@ -9,99 +9,101 @@
 import Foundation
 import CoreBluetooth
 
-class PlaybulbManager:
-    NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+class PlaybulbBluetoothManager {
     
-    var manager:CBCentralManager!
-    var peripheral:CBPeripheral!
-    var searchedDeviceName:String!
+    let LOGGER = Logger("PlaybulbBluetoothManager")
+    var bluetoothManager:BluetoothManager!
     
-    override init() {
-        super.init()
-        manager = CBCentralManager(delegate: self, queue: nil)
-        searchedDeviceName = "Candle"
-        print("bluetooth successfully initialized")
+    func changeColor(_ color:String){
         
-    }
-    
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        if central.state == CBCentralManagerState.poweredOn {
-            central.scanForPeripherals(withServices: nil, options: nil)
-        } else {
-            print("Bluetooth not available.")
+        if color.characters.count != 12 {
+            LOGGER.error("Value \(color) has not length 12")
             exit(0)
         }
+        
+        /*
+         white (seems like saturation)	0x00 (off) .. 0xff (full)
+         red	0x00 (off) .. 0xff (full)
+         green	0x00 (off) .. 0xff (full)
+         blue	0x00 (off) .. 0xff (full)
+         */
+        
+        let whiteRange = color.index(color.startIndex, offsetBy: 0)..<color.index(color.startIndex, offsetBy: 3)
+        let white = Int(color[whiteRange])!
+        Validate.isInRange(white,0,255)
+        
+        let redRange = color.index(color.startIndex, offsetBy: 3)..<color.index(color.startIndex, offsetBy: 6)
+        let red = Int(color[redRange])!
+        Validate.isInRange(red,0,255)
+        
+        let greenRange = color.index(color.startIndex, offsetBy: 6)..<color.index(color.startIndex, offsetBy: 9)
+        let green = Int(color[greenRange])!
+        Validate.isInRange(green,0,255)
+        
+        let blueRange = color.index(color.startIndex, offsetBy: 9)..<color.endIndex
+        let blue = Int(color[blueRange])!
+        Validate.isInRange(blue,0,255)
+        
+        let bytes : [UInt8] = [ UInt8(white), UInt8(red), UInt8(green), UInt8(blue)]
+        let data  = Data(bytes:bytes)
+
+        
+        let value = WriteBluetoothValue("PLAYBULB CANDLE", "FF02", "FFFC", data)
+        bluetoothManager = BluetoothManager()
+        bluetoothManager.start(value)
     }
     
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
-        if peripheral.name!.contains(searchedDeviceName) {
-            print("name: \(peripheral.name) : \(RSSI) dBm")
-            print(peripheral)
-            
-            self.manager.stopScan()
-            
-            self.peripheral = peripheral
-            self.peripheral.delegate = self
-            
-            manager.connect(peripheral, options: nil)
-            
-            
+    
+}
+
+
+class PlaybulbManager {
+    
+    let LOGGER = Logger("PlaybulbManager")
+    let playbulbBluetoothManager = PlaybulbBluetoothManager()
+ 
+    func staticMode() {
+        let argument = CommandLine.arguments[1]
+        let (option, value) = getOption(argument.substring(from: argument.characters.index(argument.startIndex, offsetBy: 1)))
+
+        switch option {
+        case .changeColor:
+            playbulbBluetoothManager.changeColor(CommandLine.arguments[2])
+        case .help:
+            printHelp()
+        case .unknown:
+            LOGGER.error("Unknown option \(value)")
+            printHelp()
         }
         
     }
-    
-    
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        peripheral.discoverServices(nil)
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        for service in peripheral.services! {
-            let thisService = service as CBService
-            
-            print("service: " , thisService.uuid)
-            print(thisService.uuid.uuidString)
-            
-            if thisService.uuid.uuidString.contains("FF02") {
-                print("service ff02 found")
-                peripheral.discoverCharacteristics(nil, for: thisService)
-                //thisService.setValue("ff00000004000000", forKey: "FFFC")
-            }
-            
-        }
-    }
-    
 
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        print("charakcteristics:", service.characteristics)
-
-        for chara in service.characteristics! {
-            print("chara.uuid: ",chara.uuid)
-            
-            if chara.uuid.uuidString.contains("FFFC") {
-
-                let bytes : [UInt8] = [ 0x0, 0x0, 0x0, 0x0]
-                let data = Data(bytes:bytes)
-                
-                peripheral.writeValue(data, for: chara, type: CBCharacteristicWriteType.withResponse)
-                print("changed")
-                // without reading the value again, we don't get the update listener called
-                peripheral.readValue(for: chara)
-            }
-        }
-
-        
-        
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("value updated")
-        manager.cancelPeripheralConnection(peripheral)
+    func printHelp() {
+        let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
+        print("usage:")
+        print("\(executableName) -change-color colorString")
+        print("or")
+        print("\(executableName) -h to show usage information")
         exit(0)
     }
 
+    func getOption(_ option: String) -> (option:OptionType, value: String) {
+        return (OptionType(value: option), option)
+    }
     
+}
+
+enum OptionType: String {
+    case changeColor = "change-color"
+    case help = "h"
+    case unknown
     
+    init(value: String) {
+        switch value {
+        case "change-color": self = .changeColor
+        case "h": self = .help
+        default: self = .unknown
+        }
+    }
 }
 

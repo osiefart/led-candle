@@ -7,14 +7,14 @@
 //
 import Foundation
 
-class Panagram {
-    func staticMode() {
-        ConsoleIO.printUsage()
-    }
-}
 
-let panagram = Panagram()
-panagram.staticMode()
 print("searching for playbulbs")
 var playbulbManager = PlaybulbManager()
+
+if CommandLine.argc < 2 {
+    print("wrong number of arguments")
+} else {
+    playbulbManager.staticMode()
+}
+
 dispatchMain()
